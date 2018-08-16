@@ -626,6 +626,15 @@ double ImageRegistrationMethod::GetMetricValue() const
   return m_MetricValue;
 }
 
+uint64_t ImageRegistrationMethod::GetMetricNumberOfValidPoints() const
+{
+  if(bool(this->m_pfGetMetricNumberOfValidPoints))
+    {
+    return this->m_pfGetMetricNumberOfValidPoints();
+    }
+  return m_NumberOfValidPoints;
+}
+
 std::vector<double> ImageRegistrationMethod::GetOptimizerScales() const
 {
   if(this->m_OptimizerScalesType==Manual)
@@ -926,6 +935,7 @@ Transform ImageRegistrationMethod::ExecuteInternal ( const Image &inFixed, const
 
     m_MetricValue = this->GetMetricValue();
     m_Iteration = this->GetOptimizerIteration();
+    m_NumberOfValidPoints = this->GetMetricNumberOfValidPoints();
 
     throw;
     }
@@ -936,6 +946,7 @@ Transform ImageRegistrationMethod::ExecuteInternal ( const Image &inFixed, const
 
   m_MetricValue = this->GetMetricValue();
   m_Iteration = this->GetOptimizerIteration();
+  m_NumberOfValidPoints = this->GetMetricNumberOfValidPoints();
 
   if (this->m_InitialTransformInPlace)
     {
@@ -1172,6 +1183,7 @@ void ImageRegistrationMethod::OnActiveProcessDelete( ) SITK_NOEXCEPT
   this->m_pfGetOptimizerLearningRate = SITK_NULLPTR;
   this->m_pfGetOptimizerConvergenceValue = SITK_NULLPTR;
   this->m_pfGetMetricValue = SITK_NULLPTR;
+  this->m_pfGetMetricNumberOfValidPoints = SITK_NULLPTR;
   this->m_pfGetOptimizerScales = SITK_NULLPTR;
   this->m_pfGetOptimizerStopConditionDescription = SITK_NULLPTR;
 
