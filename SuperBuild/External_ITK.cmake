@@ -83,7 +83,6 @@ ExternalProject_Add(${proj}
   BINARY_DIR ${proj}-build
   CMAKE_GENERATOR ${gen}
   CMAKE_ARGS
-  --Wno-dev
   --no-warn-unused-cli
   -C "${CMAKE_CURRENT_BINARY_DIR}/${proj}-build/CMakeCacheInit.txt"
   -DITK_LEGACY_REMOVE:BOOL=ON
