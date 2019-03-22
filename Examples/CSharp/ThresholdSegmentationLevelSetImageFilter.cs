@@ -66,7 +66,7 @@ namespace itk.simple.examples {
 
             // Read input image
 
-            SitkImage inputImage = SimpleITK.ReadImage("C:/test/viewportsbitmaps/BrainProtonDensitySlice.png", PixelId.sitkFloat32);
+            SitkImage inputImage = SimpleITK.ReadImage(args[0], PixelId.sitkFloat32);
 
             //  The FastMarching will be used to generate the initial level set in the form of a distance
             //  FastMarching requires the user to provide a seed
