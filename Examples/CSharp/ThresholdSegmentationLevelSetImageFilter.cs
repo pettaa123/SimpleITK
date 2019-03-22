@@ -135,7 +135,7 @@ namespace itk.simple.examples {
             Console.WriteLine("Max. no. iterations: {0}", thresholdSegmentation.GetNumberOfIterations());
             Console.WriteLine("Max. RMS error: {0}", thresholdSegmentation.GetMaximumRMSError());
             Console.WriteLine("");
-            Console.WriteLine("No. elpased iterations: {0}", thresholdSegmentation.GetElapsedIterations());
+            Console.WriteLine("No. elapsed iterations: {0}", thresholdSegmentation.GetElapsedIterations());
             Console.WriteLine("RMS change: {0}", thresholdSegmentation.GetRMSChange());
 
             //needs imageJ installed and in %path%
