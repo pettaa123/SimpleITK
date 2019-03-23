@@ -19,7 +19,7 @@
 
 //    INPUTS:  {BrainProtonDensitySlice.png}
 //    OUTPUTS: {ThresholdSegmentationLevelSetImageFilterVentricle.png}
-//    ARGUMENTS:    81 112 210 250
+//    ARGUMENTS:    81 112 5 210 250
 
 
 // The ThresholdSegmentationLevelSetImageFilter is an extension of
@@ -49,13 +49,14 @@ using itk.simple;
 using PixelId = itk.simple.PixelIDValueEnum;
 using SitkImage = itk.simple.Image;
 
-namespace itk.simple.examples {
+namespace itk.simple.examples
+{
 
     public class Program
     {
         static void Main(string[] args)
         {
-            if (args.Length < 5)
+            if (args.Length < 6)
             {
                 Console.WriteLine("Missing Parameters ");
                 Console.WriteLine("Usage: " + System.AppDomain.CurrentDomain.FriendlyName +
@@ -66,7 +67,7 @@ namespace itk.simple.examples {
 
             // Read input image
 
-            SitkImage inputImage = SimpleITK.ReadImage(args[0], PixelId.sitkFloat32);
+            SitkImage inputImage = SimpleITK.ReadImage(args[0],PixelId.sitkFloat64);
 
             //  The FastMarching will be used to generate the initial level set in the form of a distance
             //  FastMarching requires the user to provide a seed
@@ -76,18 +77,22 @@ namespace itk.simple.examples {
             //  determination of an initial Level Set. We could have used the
             //  DanielssonDistanceMapImageFilter in the same way.
 
-            //  The seeds are passed stored in a list.  
-           
-            VectorUIntList seeds = new VectorUIntList();
-            VectorUInt32 seedPosition = new VectorUInt32(2);
-            seedPosition.Add(Convert.ToUInt32(args[2]));
-            seedPosition.Add(Convert.ToUInt32(args[3]));
-            seeds.Add(seedPosition);
-            
-            double initialDistance = Convert.ToDouble(args[6]);
-            double seedValue = -initialDistance;
+            FastMarchingImageFilter fast = new FastMarchingImageFilter();
 
-            SitkImage fastMarchImage = SimpleITK.FastMarching(inputImage, seeds);
+            //  The seeds are passed stored in a list.  
+
+            VectorUInt32 seedPosition = new VectorUInt32() { Convert.ToUInt32(args[2]), Convert.ToUInt32(args[3]) };
+            VectorUIntList seeds = new VectorUIntList() { seedPosition };
+
+            fast.SetTrialPoints(seeds);
+
+            //  Since the FastMarchingImageFilter is used here just as a
+            //  Distance Map generator. It does not require a speed image as input.
+            //  Instead the constant value 1.0 is passed using the
+            //  SetSpeedConstant() method
+
+            SitkImage fastMarchImage=fast.Execute(inputImage);
+
 
             //  For the ThresholdSegmentationLevelSetImageFilter, scaling
             //  parameters are used to balance the influence of the propagation
@@ -98,7 +103,7 @@ namespace itk.simple.examples {
             //  example.
 
             ThresholdSegmentationLevelSetImageFilter thresholdSegmentation = new ThresholdSegmentationLevelSetImageFilter();
-            
+
             thresholdSegmentation.SetPropagationScaling(1.0);
             if (args.Length > 6)
             {
@@ -122,12 +127,17 @@ namespace itk.simple.examples {
             // the upper and lower threshold values U and L, and the isosurface
             // value to use in the initial model.
 
-            thresholdSegmentation.SetUpperThreshold( Convert.ToDouble(args[5]));
-            thresholdSegmentation.SetLowerThreshold( Convert.ToDouble(args[4]));
+            thresholdSegmentation.SetUpperThreshold(Convert.ToDouble(args[5]));
+            thresholdSegmentation.SetLowerThreshold(Convert.ToDouble(args[4]));
+            
+            SitkImage threshSegImage = thresholdSegmentation.Execute(fastMarchImage,inputImage);
 
-            SitkImage threshSegImage=thresholdSegmentation.Execute(fastMarchImage, inputImage);
+            SimpleITK.BinaryThreshold(threshSegImage, -1000, 0, 255, 0);
+            threshSegImage = SimpleITK.Cast(threshSegImage, PixelId.sitkLabelUInt8);
+            SimpleITK.WriteImage(threshSegImage, args[1]);
 
-            SitkImage threshSegResult = SimpleITK.BinaryThreshold(threshSegImage, -1000.0, 0.0, 255, 0);
+            //needs imageJ installed and in %path%
+            SimpleITK.Show(threshSegImage);
 
 
             // Print out some useful information
@@ -138,10 +148,7 @@ namespace itk.simple.examples {
             Console.WriteLine("No. elapsed iterations: {0}", thresholdSegmentation.GetElapsedIterations());
             Console.WriteLine("RMS change: {0}", thresholdSegmentation.GetRMSChange());
 
-            //needs imageJ installed and in %path%
-            SimpleITK.Show(threshSegResult);
-
-            SimpleITK.WriteImage(threshSegResult, args[1]);
+        
 
         }
     }
