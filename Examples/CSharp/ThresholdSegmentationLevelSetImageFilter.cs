@@ -19,7 +19,7 @@
 
 //    INPUTS:  {BrainProtonDensitySlice.png}
 //    OUTPUTS: {ThresholdSegmentationLevelSetImageFilterVentricle.png}
-//    ARGUMENTS:    81 112 5 210 250
+//    ARGUMENTS:    81 112 210 250
 
 
 // The ThresholdSegmentationLevelSetImageFilter is an extension of
