@@ -49,11 +49,11 @@ namespace itk.simple.examples
 
             uint[] seedPosition =  {Convert.ToUInt32(args[2]), Convert.ToUInt32(args[3])};
 
-            double sigma = Convert.ToDouble(args[4]);
-            double alpha = Convert.ToDouble(args[5]);
-            double beta = Convert.ToDouble(args[6]);
-            double timeThreshold = Convert.ToDouble(args[7]);
-            double stoppingTime = Convert.ToDouble(args[8]);
+            double sigma = double.Parse(args[4], CultureInfo.InvariantCulture);
+            double alpha = double.Parse(args[5], CultureInfo.InvariantCulture);
+            double beta = double.Parse(args[6], CultureInfo.InvariantCulture);
+            double timeThreshold = double.Parse(args[7], CultureInfo.InvariantCulture);
+            double stoppingTime = double.Parse(args[8], CultureInfo.InvariantCulture);
 
             // Read input image
 
