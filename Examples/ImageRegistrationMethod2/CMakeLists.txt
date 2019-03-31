@@ -18,7 +18,7 @@ sitk_add_test(NAME CXX.Example.ImageRegistrationMethod2
     0.02
   )
   
-sitk_add_csharp_test(NAME CXX.Example.ImageRegistrationMethod2
+sitk_add_csharp_test( Example.ImageRegistrationMethod2
 COMMAND
   $<TARGET_FILE:ImageRegistrationMethod2>
   DATA{${SimpleITK_DATA_ROOT}/Input/BrainProtonDensitySliceBorder20.png}
