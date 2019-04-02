@@ -43,7 +43,7 @@ namespace itk.simple.examples
         }
     }
 
-    class ImageRegistrationMethod1
+    class ImageRegistrationMethod2
     {
 
         static void Main(string[] args)
@@ -88,12 +88,6 @@ namespace itk.simple.examples
             R.AddCommand(EventEnum.sitkIterationEvent, cmd);
 
             Transform outTx = R.Execute(fixedImage, movingImage);
-
-            // System.out.println("-------");
-            // System.out.println(outTx.toString());
-            // System.out.format("Optimizer stop condition: %s\n", R.getOptimizerStopConditionDescription());
-            // System.out.format(" Iteration: %d\n", R.getOptimizerIteration());
-            // System.out.format(" Metric value: %f\n", R.getMetricValue());
 
             outTx.WriteTransform(args[2]);
 
