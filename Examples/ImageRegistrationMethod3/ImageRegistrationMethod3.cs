@@ -74,8 +74,10 @@ namespace itk.simple.examples
                                                       minStep,
                                                       numberOfIterations,
                                                       gradientMagnitudeTolerance);
+            R.SetOptimizerScalesFromIndexShift();
 
-            R.SetInitialTransform(new TranslationTransform(fixedImage.GetDimension()));
+            tx = sitk.CenteredTransformInitializer(fixedImage, movingImage, sitk.Similarity2DTransform());
+            R.SetInitialTransform(tx);
             R.SetInterpolator(InterpolatorEnum.sitkLinear);
 
             IterationUpdate cmd = new IterationUpdate(R);
